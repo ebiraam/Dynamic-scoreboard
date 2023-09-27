@@ -1,0 +1,138 @@
+@layer demo.colors {
+    :root {
+      --hue: 230;
+      --primary: oklch(70% .2 var(--hue));
+      --primary-highlight: oklch(97% .2 var(--hue));
+      --header-bg: oklch(35% .01 200);
+      --text: white;
+    }
+    
+    li {
+      --_bg: oklch(
+        /* decrease lightness as list grows */
+        calc(75% - (var(--i) * 5%)) 
+        
+        /* decrease chroma as list grows */
+        calc(.2 - (var(--i) * .01)) 
+        
+        /* lightly rotate the hue as the list grows */
+        calc(var(--hue) - (var(--i) + 5))
+      );
+    }
+  }
+  
+  @layer demo.color-usage {
+    html {
+      background: radial-gradient(
+        circle at center, 
+        var(--primary-highlight), 
+        var(--primary)
+      );
+    }
+    
+    .scoreboard {
+      box-shadow:
+        3px 3px 2px oklch(0% .02 var(--hue) / 0.02),
+        7px 7px 5px oklch(0% .02 var(--hue) / 0.03),
+        13px 13px 10px oklch(0% .02 var(--hue) / 0.04),
+        22px 22px 18px oklch(0% .02 var(--hue) / 0.07),
+        42px 42px 33px oklch(0% .02 var(--hue) / 0.075),
+        100px 100px 80px oklch(0% .02 var(--hue) / 0.1)
+      ;
+      
+      & > header {
+        background: var(--header-bg);
+        color: var(--text);
+        
+        & > svg {
+          color: var(--primary);
+        }
+      }
+      
+      & li {
+        background: var(--_bg);
+        color: var(--text);
+      }
+      
+      & .number {
+        background: var(--text);
+        color: var(--_bg);
+      }
+    }
+  }
+  
+  @layer demo.scoreboard {
+    .scoreboard {
+      --_pad: 1rem 1.5rem;
+      
+      border-radius: 10px;
+      overflow: clip;
+      
+      & > header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: var(--_pad);
+        
+        & > svg {
+          inline-size: 2.5ch;
+        }
+      }
+      
+      & > ol {
+        padding: 0;
+        
+        & > li {
+          padding: var(--_pad);
+          display: flex;
+          gap: 1rem;
+          align-items: center;
+          
+          &::marker {
+            display: inline-block;
+          }
+          
+          & > p {
+            flex: 1;
+            inline-size: clamp(10ch, 50vw, 30ch);
+          }
+          
+          & > .number {
+            aspect-ratio: 1;
+            border-radius: 1e3px;
+            block-size: 3ch;
+            font-size: .9rem;
+            line-height: 1;
+            display: inline-flex;
+            place-items: center;
+            place-content: center;
+          }
+        }
+      }
+    }
+  }
+  
+  @layer demo.support {
+    * {
+      box-sizing: border-box;
+      margin: 0;
+    }
+  
+    html {
+      block-size: 100%;
+    }
+  
+    body {
+      min-block-size: 100%;
+      font-family: 'Open Sans', system-ui, sans-serif;
+  
+      display: grid;
+      place-items: center;
+      place-content: center;
+      gap: 2rem;
+    }
+    
+    input[type="range"] {
+      accent-color: var(--primary);
+    }
+  }
